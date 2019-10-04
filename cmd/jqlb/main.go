@@ -8,12 +8,17 @@ import (
 )
 
 const (
+	// ExitCodeOK exits normally
 	ExitCodeOK = iota
+	// ExitCodeParseFlagError exits with flag parse error
 	ExitCodeParseFlagError
 )
 
+// GoJiraOption describes custom-command's option of go-jira/jira
 type GoJiraOption string
 
+// String fomrats GoJiraOption as string
+// Option is <no value> if it is not set
 func (g GoJiraOption) String() string {
 	if g == "<no value>" {
 		return ""
@@ -29,12 +34,14 @@ var (
 	assignee  string
 )
 
+// CLI has streams
 type CLI struct {
 	In  io.Writer
 	Out io.Writer
 	Err io.Writer
 }
 
+// Run runs Command
 func (c *CLI) Run(args []string) int {
 	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
 	flags.SetOutput(c.Err)

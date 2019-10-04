@@ -7,7 +7,7 @@ before:
 builds:
 - env:
   - CGO_ENABLED=0
-  main: ./cmd/op-kv/main.go
+  main: ./cmd/jqlb/main.go
 archives:
 - replacements:
     darwin: Darwin
