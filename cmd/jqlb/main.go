@@ -30,7 +30,7 @@ var (
 	project    string
 	issueType  string
 	component  string
-	state      string
+	status     string
 	assignee   string
 	resolution string
 )
@@ -47,7 +47,7 @@ func (c *CLI) Run(args []string) int {
 	flags.SetOutput(c.Err)
 	flags.StringVar(&issueType, "i", "", "Issue type to search for")
 	flags.StringVar(&component, "c", "", "Component to search for")
-	flags.StringVar(&state, "S", "", "Filter on issue status")
+	flags.StringVar(&status, "S", "", "Filter on issue status")
 	flags.StringVar(&assignee, "a", "", "User assigned the issue")
 	flags.StringVar(&resolution, "r", "", "Filter on issue resolution")
 
@@ -59,7 +59,7 @@ func (c *CLI) Run(args []string) int {
 	queryMap["project"] = GoJiraOption(project).String()
 	queryMap["type"] = GoJiraOption(issueType).String()
 	queryMap["component"] = GoJiraOption(component).String()
-	queryMap["state"] = GoJiraOption(state).String()
+	queryMap["state"] = GoJiraOption(status).String()
 	queryMap["assignee"] = GoJiraOption(assignee).String()
 	queryMap["resolution"] = GoJiraOption(resolution).String()
 
