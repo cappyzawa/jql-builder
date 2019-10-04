@@ -27,16 +27,16 @@ func (g GoJiraOption) String() string {
 }
 
 var (
-	project   string
-	issueType string
-	component string
-	state     string
-	assignee  string
+	project    string
+	issueType  string
+	component  string
+	status     string
+	assignee   string
+	resolution string
 )
 
 // CLI has streams
 type CLI struct {
-	In  io.Writer
 	Out io.Writer
 	Err io.Writer
 }
@@ -47,8 +47,9 @@ func (c *CLI) Run(args []string) int {
 	flags.SetOutput(c.Err)
 	flags.StringVar(&issueType, "i", "", "Issue type to search for")
 	flags.StringVar(&component, "c", "", "Component to search for")
-	flags.StringVar(&state, "S", "", "Filter on issue status")
+	flags.StringVar(&status, "S", "", "Filter on issue status")
 	flags.StringVar(&assignee, "a", "", "User assigned the issue")
+	flags.StringVar(&resolution, "r", "", "Filter on issue resolution")
 
 	if err := flags.Parse(args[1:]); err != nil {
 		return ExitCodeParseFlagError
@@ -58,8 +59,9 @@ func (c *CLI) Run(args []string) int {
 	queryMap["project"] = GoJiraOption(project).String()
 	queryMap["type"] = GoJiraOption(issueType).String()
 	queryMap["component"] = GoJiraOption(component).String()
-	queryMap["state"] = GoJiraOption(state).String()
+	queryMap["state"] = GoJiraOption(status).String()
 	queryMap["assignee"] = GoJiraOption(assignee).String()
+	queryMap["resolution"] = GoJiraOption(resolution).String()
 
 	query := buildQuery(queryMap)
 
