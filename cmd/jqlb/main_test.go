@@ -27,10 +27,9 @@ func TestGojiraOptionString(t *testing.T) {
 }
 
 func TestBuildQuery(t *testing.T) {
-	expect := "project=PROJECT AND issueType=Task"
+	expect := "project=PROJECT"
 	queryMap := make(map[string]string)
 	queryMap["project"] = "PROJECT"
-	queryMap["issueType"] = "Task"
 	actual := buildQuery(queryMap)
 	if actual != expect {
 		t.Errorf("actual should be %s, but it is %s", expect, actual)
