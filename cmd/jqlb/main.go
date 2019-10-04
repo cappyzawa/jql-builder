@@ -32,6 +32,8 @@ var (
 	component string
 	state     string
 	assignee  string
+
+	enableResolvedOrClosed bool
 )
 
 // CLI has streams
@@ -49,6 +51,7 @@ func (c *CLI) Run(args []string) int {
 	flags.StringVar(&component, "c", "", "Component to search for")
 	flags.StringVar(&state, "S", "", "Filter on issue status")
 	flags.StringVar(&assignee, "a", "", "User assigned the issue")
+	flags.BoolVar(&enableResolvedOrClosed, "E", false, "Enable Resove or Close issues")
 
 	if err := flags.Parse(args[1:]); err != nil {
 		return ExitCodeParseFlagError
@@ -58,7 +61,7 @@ func (c *CLI) Run(args []string) int {
 	queryMap["project"] = GoJiraOption(project).String()
 	queryMap["type"] = GoJiraOption(issueType).String()
 	queryMap["component"] = GoJiraOption(component).String()
-	queryMap["state"] = GoJiraOption(state).String()
+	queryMap["status"] = GoJiraOption(state).String()
 	queryMap["assignee"] = GoJiraOption(assignee).String()
 
 	query := buildQuery(queryMap)
@@ -78,6 +81,17 @@ func buildQuery(queryMap map[string]string) string {
 			query = append(query, []byte("=")...)
 			query = append(query, []byte(v)...)
 		}
+	}
+
+	if !enableResolvedOrClosed && queryMap["status"] != "Closed" && queryMap["status"] != "Resoved" {
+		query = append(query, []byte(" AND ")...)
+		query = append(query, []byte("status")...)
+		query = append(query, []byte("!=")...)
+		query = append(query, []byte("Closed")...)
+		query = append(query, []byte(" AND ")...)
+		query = append(query, []byte("status")...)
+		query = append(query, []byte("!=")...)
+		query = append(query, []byte("Resoved")...)
 	}
 	return string(query)
 }

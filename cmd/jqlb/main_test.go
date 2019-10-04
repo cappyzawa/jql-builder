@@ -27,12 +27,54 @@ func TestGojiraOptionString(t *testing.T) {
 }
 
 func TestBuildQuery(t *testing.T) {
-	expect := "project=PROJECT"
-	queryMap := make(map[string]string)
-	queryMap["project"] = "PROJECT"
-	actual := buildQuery(queryMap)
-	if actual != expect {
-		t.Errorf("actual should be %s, but it is %s", expect, actual)
+	cases := []struct {
+		name                   string
+		expect                 string
+		queryMapFunc           func() map[string]string
+		enableResolvedOrClosed bool
+	}{
+		{
+			name:   "enableResolvedOrClosed is false",
+			expect: "project=PROJECT AND status!=Closed AND status!=Resoved",
+			queryMapFunc: func() map[string]string {
+				queryMap := make(map[string]string)
+				queryMap["project"] = "PROJECT"
+				return queryMap
+			},
+			enableResolvedOrClosed: false,
+		},
+		{
+			name:   "enableResolvedOrClosed is true",
+			expect: "project=PROJECT",
+			queryMapFunc: func() map[string]string {
+				queryMap := make(map[string]string)
+				queryMap["project"] = "PROJECT"
+				return queryMap
+			},
+			enableResolvedOrClosed: true,
+		},
+		{
+			name:   "enableResolvedOrClosed is false but status is specified Closed",
+			expect: "project=PROJECT AND status=Closed",
+			queryMapFunc: func() map[string]string {
+				queryMap := make(map[string]string)
+				queryMap["project"] = "PROJECT"
+				queryMap["status"] = "Closed"
+				return queryMap
+			},
+			enableResolvedOrClosed: false,
+		},
+	}
+	t.Helper()
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			enableResolvedOrClosed = c.enableResolvedOrClosed
+			queryMap := c.queryMapFunc()
+			actual := buildQuery(queryMap)
+			if actual != c.expect {
+				t.Errorf("actual should be %s, but it is %s", c.expect, actual)
+			}
+		})
 	}
 }
 
