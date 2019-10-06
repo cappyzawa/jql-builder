@@ -33,6 +33,7 @@ var (
 	status     string
 	assignee   string
 	resolution string
+	label      string
 )
 
 // CLI has streams
@@ -50,6 +51,7 @@ func (c *CLI) Run(args []string) int {
 	flags.StringVar(&status, "S", "", "Filter on issue status")
 	flags.StringVar(&assignee, "a", "", "User assigned the issue")
 	flags.StringVar(&resolution, "r", "", "Filter on issue resolution")
+	flags.StringVar(&label, "l", "", "Filter on issue label")
 
 	if err := flags.Parse(args[1:]); err != nil {
 		return ExitCodeParseFlagError
@@ -62,6 +64,7 @@ func (c *CLI) Run(args []string) int {
 	queryMap["state"] = GoJiraOption(status).String()
 	queryMap["assignee"] = GoJiraOption(assignee).String()
 	queryMap["resolution"] = GoJiraOption(resolution).String()
+	queryMap["label"] = GoJiraOption(label).String()
 
 	query := buildQuery(queryMap)
 
