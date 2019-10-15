@@ -61,7 +61,7 @@ func (c *CLI) Run(args []string) int {
 	queryMap["project"] = GoJiraOption(project).String()
 	queryMap["type"] = GoJiraOption(issueType).String()
 	queryMap["component"] = GoJiraOption(component).String()
-	queryMap["state"] = GoJiraOption(status).String()
+	queryMap["status"] = GoJiraOption(status).String()
 	queryMap["assignee"] = GoJiraOption(assignee).String()
 	queryMap["resolution"] = GoJiraOption(resolution).String()
 	queryMap["labels"] = GoJiraOption(label).String()
